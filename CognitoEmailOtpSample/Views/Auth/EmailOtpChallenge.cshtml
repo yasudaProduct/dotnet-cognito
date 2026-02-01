@@ -1,0 +1,46 @@
+@model CognitoEmailOtpSample.Models.OtpChallengeViewModel
+@{
+    ViewData["Title"] = "Email OTP 検証";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-4">
+        <h2 class="text-center mb-4">Email OTP 検証</h2>
+
+        <div class="card">
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <strong>@Model.Email</strong> 宛にOTPコードを送信しました。
+                    メールを確認して6桁のコードを入力してください。
+                </div>
+
+                <form asp-action="EmailOtpChallenge" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <input asp-for="Email" type="hidden" />
+                    <input asp-for="Session" type="hidden" />
+
+                    <div class="mb-3">
+                        <label asp-for="OtpCode" class="form-label">OTP コード（6桁）</label>
+                        <input asp-for="OtpCode" class="form-control form-control-lg text-center"
+                               type="text"
+                               maxlength="6"
+                               placeholder="000000"
+                               autofocus
+                               style="letter-spacing: 0.5rem; font-size: 1.5rem;" />
+                        <span asp-validation-for="OtpCode" class="text-danger"></span>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">検証</button>
+                        <a asp-action="SignIn" class="btn btn-outline-secondary">キャンセル</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
