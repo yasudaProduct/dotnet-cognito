@@ -11,7 +11,7 @@
             <div class="card-body">
                 <div class="alert alert-info">
                     <strong>@Model.Email</strong> 宛にOTPコードを送信しました。
-                    メールを確認して6桁のコードを入力してください。
+                    メールを確認してコードを入力してください。
                 </div>
 
                 <form asp-action="EmailOtpChallenge" method="post">
@@ -21,14 +21,15 @@
                     <input asp-for="Session" type="hidden" />
 
                     <div class="mb-3">
-                        <label asp-for="OtpCode" class="form-label">OTP コード（6桁）</label>
+                        <label asp-for="OtpCode" class="form-label">OTP コード（6～8桁）</label>
                         <input asp-for="OtpCode" class="form-control form-control-lg text-center"
                                type="text"
-                               maxlength="6"
-                               placeholder="000000"
+                               maxlength="8"
+                               placeholder="00000000"
                                autofocus
                                style="letter-spacing: 0.5rem; font-size: 1.5rem;" />
                         <span asp-validation-for="OtpCode" class="text-danger"></span>
+                        <div class="form-text text-center">メールで受信した6桁または8桁の数字を入力してください</div>
                     </div>
 
                     <div class="d-grid gap-2">

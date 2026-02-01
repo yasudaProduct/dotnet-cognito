@@ -74,14 +74,47 @@ public class CognitoEmailOtpService : ICognitoEmailOtpService
 
             var response = await _cognitoClient.InitiateAuthAsync(request);
 
-            if (response.ChallengeName == ChallengeNameType.EMAIL_OTP)
+            string? challengeName = response.ChallengeName?.Value;
+            string? session = response.Session;
+
+            // SELECT_CHALLENGE が返された場合、EMAIL_OTP を選択
+            if (response.ChallengeName == ChallengeNameType.SELECT_CHALLENGE)
             {
-                _logger.LogInformation("Email OTP チャレンジが正常に開始されました");
-                return (response.ChallengeName.Value, response.Session);
+                _logger.LogInformation("SELECT_CHALLENGE を受信、EMAIL_OTP を選択します");
+
+                var selectChallengeResponses = new Dictionary<string, string>
+                {
+                    { "ANSWER", "EMAIL_OTP" },
+                    { "USERNAME", email }
+                };
+
+                // SECRET_HASH を追加（必要な場合）
+                if (secretHash != null)
+                {
+                    selectChallengeResponses["SECRET_HASH"] = secretHash;
+                }
+
+                var selectRequest = new RespondToAuthChallengeRequest
+                {
+                    ChallengeName = ChallengeNameType.SELECT_CHALLENGE,
+                    ClientId = _clientId,
+                    Session = response.Session,
+                    ChallengeResponses = selectChallengeResponses
+                };
+
+                var selectResponse = await _cognitoClient.RespondToAuthChallengeAsync(selectRequest);
+                challengeName = selectResponse.ChallengeName?.Value;
+                session = selectResponse.Session;
             }
 
-            _logger.LogWarning("予期しないチャレンジタイプ: {ChallengeName}", response.ChallengeName?.Value);
-            throw new InvalidOperationException($"予期しないチャレンジタイプ: {response.ChallengeName?.Value}");
+            if (challengeName == "EMAIL_OTP")
+            {
+                _logger.LogInformation("Email OTP チャレンジが正常に開始されました");
+                return (challengeName, session!);
+            }
+
+            _logger.LogWarning("予期しないチャレンジタイプ: {ChallengeName}", challengeName);
+            throw new InvalidOperationException($"予期しないチャレンジタイプ: {challengeName}");
         }
         catch (UserNotFoundException ex)
         {
@@ -92,6 +125,17 @@ public class CognitoEmailOtpService : ICognitoEmailOtpService
         {
             _logger.LogWarning("認証が拒否されました: {Message}", ex.Message);
             throw new InvalidOperationException("認証が拒否されました。App Client の設定を確認してください。", ex);
+        }
+        catch (InvalidParameterException ex) when (ex.Message.Contains("Password Challenge is Required"))
+        {
+            _logger.LogError(ex, "パスワードチャレンジが必須です");
+            throw new InvalidOperationException(
+                "Cognito ユーザーにパスワードが設定されているか、ユーザーのステータスが FORCE_CHANGE_PASSWORD になっています。" +
+                "以下のいずれかの対処を行ってください：\n" +
+                "1. AWS コンソールでユーザーを削除し、パスワードなしで再作成\n" +
+                "2. ユーザーのステータスを CONFIRMED に変更\n" +
+                "3. AdminSetUserPassword API でパスワードを設定（Permanent=true）\n" +
+                "詳細は README.md を参照してください。", ex);
         }
         catch (AmazonCognitoIdentityProviderException ex)
         {

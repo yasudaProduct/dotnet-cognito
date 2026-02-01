@@ -12,7 +12,8 @@ public class LocalAuthService : ILocalAuthService
     private readonly Dictionary<string, string> _users = new()
     {
         { "user@example.com", "Password123!" },
-        { "test@example.com", "Test123!" }
+        { "test@example.com", "Test123!" },
+        { "yuta.develop.ct@gmail.com", "Test123!" }
     };
 
     public LocalAuthService(ILogger<LocalAuthService> logger)
