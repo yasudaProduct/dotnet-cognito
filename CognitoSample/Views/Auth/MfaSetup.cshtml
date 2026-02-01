@@ -1,0 +1,92 @@
+@model CognitoSample.Models.MfaSetupViewModel
+@{
+    ViewData["Title"] = "MFA設定";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">多要素認証（MFA）の設定</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>手順1: 認証アプリをインストール</h5>
+                        <p class="text-muted">
+                            以下のいずれかの認証アプリをスマートフォンにインストールしてください：
+                        </p>
+                        <ul>
+                            <li>Google Authenticator</li>
+                            <li>Microsoft Authenticator</li>
+                            <li>Authy</li>
+                        </ul>
+
+                        <h5 class="mt-4">手順2: シークレットキーを登録</h5>
+                        <p class="text-muted">
+                            認証アプリで以下のシークレットキーを手動で入力するか、QRコードをスキャンしてください。
+                        </p>
+
+                        <div class="mb-3">
+                            <label class="form-label">シークレットキー</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" value="@Model.SecretCode" readonly id="secretCode" />
+                                <button class="btn btn-outline-secondary" type="button" onclick="copySecret()">コピー</button>
+                            </div>
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(Model.QrCodeUri))
+                        {
+                            <div class="mb-3">
+                                <label class="form-label">QRコード URI</label>
+                                <div class="p-3 bg-light rounded">
+                                    <code style="word-break: break-all;">@Model.QrCodeUri</code>
+                                </div>
+                                <small class="text-muted">認証アプリの「QRコードをスキャン」または「手動で入力」から登録できます</small>
+                            </div>
+                        }
+                    </div>
+
+                    <div class="col-md-6">
+                        <h5>手順3: 確認コードを入力</h5>
+                        <p class="text-muted">
+                            認証アプリに表示されている6桁のコードを入力して設定を完了してください。
+                        </p>
+
+                        <form asp-action="MfaSetup" method="post">
+                            <div asp-validation-summary="All" class="text-danger"></div>
+
+                            <input type="hidden" asp-for="SecretCode" />
+                            <input type="hidden" asp-for="QrCodeUri" />
+                            <input type="hidden" asp-for="Session" />
+                            <input type="hidden" asp-for="Email" />
+
+                            <div class="mb-3">
+                                <label asp-for="VerificationCode" class="form-label">確認コード</label>
+                                <input asp-for="VerificationCode" class="form-control text-center" maxlength="6"
+                                       style="font-size: 1.5rem; letter-spacing: 0.5rem;" autocomplete="one-time-code" />
+                                <span asp-validation-for="VerificationCode" class="text-danger"></span>
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary">MFAを有効化</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        function copySecret() {
+            var secretCode = document.getElementById('secretCode');
+            secretCode.select();
+            document.execCommand('copy');
+            alert('シークレットキーをコピーしました');
+        }
+    </script>
+}

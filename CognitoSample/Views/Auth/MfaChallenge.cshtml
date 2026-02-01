@@ -1,0 +1,41 @@
+@model CognitoSample.Models.MfaChallengeViewModel
+@{
+    ViewData["Title"] = "MFA認証";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">多要素認証（MFA）</h4>
+            </div>
+            <div class="card-body">
+                <p class="text-muted">
+                    認証アプリに表示されている6桁のコードを入力してください。
+                </p>
+
+                <form asp-action="MfaChallenge" method="post">
+                    <div asp-validation-summary="All" class="text-danger"></div>
+
+                    <input type="hidden" asp-for="Session" />
+                    <input type="hidden" asp-for="Email" />
+
+                    <div class="mb-3">
+                        <label asp-for="MfaCode" class="form-label">MFAコード</label>
+                        <input asp-for="MfaCode" class="form-control text-center" maxlength="6"
+                               style="font-size: 1.5rem; letter-spacing: 0.5rem;" autocomplete="one-time-code" />
+                        <span asp-validation-for="MfaCode" class="text-danger"></span>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">確認</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

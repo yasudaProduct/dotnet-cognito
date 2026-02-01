@@ -1,0 +1,52 @@
+@model CognitoSample.Models.SignUpViewModel
+@{
+    ViewData["Title"] = "サインアップ";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">アカウント作成</h4>
+            </div>
+            <div class="card-body">
+                <form asp-action="SignUp" method="post">
+                    <div asp-validation-summary="All" class="text-danger"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label">メールアドレス</label>
+                        <input asp-for="Email" class="form-control" type="email" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Password" class="form-label">パスワード</label>
+                        <input asp-for="Password" class="form-control" type="password" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                        <small class="form-text text-muted">8文字以上、大文字・小文字・数字・記号を含めてください</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="ConfirmPassword" class="form-label">パスワード（確認）</label>
+                        <input asp-for="ConfirmPassword" class="form-control" type="password" />
+                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">アカウント作成</button>
+                    </div>
+                </form>
+
+                <hr />
+                <div class="text-center">
+                    <p>既にアカウントをお持ちですか？</p>
+                    <a asp-action="SignIn" class="btn btn-outline-secondary">ログイン</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

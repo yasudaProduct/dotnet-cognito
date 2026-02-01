@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "cbiH75tTEWNs4WZ9wp9cwW7tx0PN9OKnIiymL+LK7khWkdH+X1l3RIgoCjrN1bCPh5dyouhaBTk+mV5MnthKZQ==",
+  "success": true,
+  "projectFilePath": "/Users/yuta/Develop/dotnet-cognito/CognitoSample/CognitoSample.csproj",
+  "expectedPackageFiles": [
+    "/Users/yuta/.nuget/packages/awssdk.cognitoidentityprovider/3.7.400/awssdk.cognitoidentityprovider.3.7.400.nupkg.sha512",
+    "/Users/yuta/.nuget/packages/awssdk.core/3.7.400/awssdk.core.3.7.400.nupkg.sha512"
+  ],
+  "logs": []
+}

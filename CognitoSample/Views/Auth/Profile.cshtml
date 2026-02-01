@@ -1,0 +1,71 @@
+@model CognitoSample.Models.UserProfileViewModel
+@{
+    ViewData["Title"] = "プロフィール";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">プロフィール</h4>
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-3">メールアドレス</dt>
+                    <dd class="col-sm-9">@Model.Email</dd>
+
+                    <dt class="col-sm-3">ユーザー名</dt>
+                    <dd class="col-sm-9">@Model.Username</dd>
+
+                    <dt class="col-sm-3">MFA状態</dt>
+                    <dd class="col-sm-9">
+                        @if (Model.MfaEnabled)
+                        {
+                            <span class="badge bg-success">有効</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-warning text-dark">無効</span>
+                        }
+                    </dd>
+                </dl>
+
+                <hr />
+
+                <div class="d-flex gap-2">
+                    @if (!Model.MfaEnabled)
+                    {
+                        <a asp-action="SetupMfa" class="btn btn-outline-primary">MFAを設定</a>
+                    }
+
+                    <form asp-action="Logout" method="post" class="d-inline">
+                        <button type="submit" class="btn btn-danger">ログアウト</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="mb-0">セキュリティ情報</h5>
+            </div>
+            <div class="card-body">
+                <p class="text-muted">
+                    このアカウントはAmazon Cognitoによって保護されています。
+                </p>
+                @if (Model.MfaEnabled)
+                {
+                    <div class="alert alert-success mb-0">
+                        多要素認証（MFA）が有効になっています。アカウントは追加のセキュリティレイヤーで保護されています。
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-warning mb-0">
+                        多要素認証（MFA）を有効にすることで、アカウントのセキュリティを強化できます。
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

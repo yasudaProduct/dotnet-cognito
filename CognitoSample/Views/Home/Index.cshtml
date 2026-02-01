@@ -1,0 +1,76 @@
+@{
+    ViewData["Title"] = "ホーム";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Cognito認証サンプル</h1>
+    <p class="lead">Amazon Cognitoを使用した認証・多要素認証（MFA）のデモアプリケーションです。</p>
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">ユーザー認証</h5>
+                <p class="card-text">メールアドレスとパスワードによるサインアップ・サインインができます。</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">メール確認</h5>
+                <p class="card-text">サインアップ時にメールアドレスの確認コードが送信されます。</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">多要素認証（MFA）</h5>
+                <p class="card-text">Google Authenticator等のTOTPアプリでMFAを設定できます。</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5 justify-content-center">
+    <div class="col-md-8">
+        <div class="card bg-light">
+            <div class="card-body text-center">
+                @if (Context.Session.GetString("AccessToken") != null)
+                {
+                    <h5>ログイン中です</h5>
+                    <p>ダッシュボードで会員限定コンテンツをご覧いただけます。</p>
+                    <a asp-controller="Dashboard" asp-action="Index" class="btn btn-primary btn-lg">ダッシュボードへ</a>
+                }
+                else
+                {
+                    <h5>ログインして会員限定コンテンツにアクセス</h5>
+                    <p>アカウントをお持ちでない方は、まずサインアップしてください。</p>
+                    <div class="d-flex gap-2 justify-content-center">
+                        <a asp-controller="Auth" asp-action="SignIn" class="btn btn-primary btn-lg">ログイン</a>
+                        <a asp-controller="Auth" asp-action="SignUp" class="btn btn-outline-primary btn-lg">サインアップ</a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-12">
+        <h4>このサンプルについて</h4>
+        <p>
+            このアプリケーションは、.NET 8とAmazon Cognitoを使用した認証システムのサンプル実装です。
+            以下の機能を確認できます：
+        </p>
+        <ul>
+            <li>ユーザー登録（サインアップ）とメールアドレス確認</li>
+            <li>ユーザーログイン（サインイン）</li>
+            <li>TOTP（時間ベースワンタイムパスワード）による多要素認証</li>
+            <li>ログイン必須ページへのアクセス制御</li>
+            <li>セッション管理とログアウト</li>
+        </ul>
+    </div>
+</div>

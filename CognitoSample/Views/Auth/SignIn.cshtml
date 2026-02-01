@@ -1,0 +1,45 @@
+@model CognitoSample.Models.SignInViewModel
+@{
+    ViewData["Title"] = "ログイン";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">ログイン</h4>
+            </div>
+            <div class="card-body">
+                <form asp-action="SignIn" method="post">
+                    <div asp-validation-summary="All" class="text-danger"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label">メールアドレス</label>
+                        <input asp-for="Email" class="form-control" type="email" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Password" class="form-label">パスワード</label>
+                        <input asp-for="Password" class="form-control" type="password" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">ログイン</button>
+                    </div>
+                </form>
+
+                <hr />
+                <div class="text-center">
+                    <p>アカウントをお持ちでないですか？</p>
+                    <a asp-action="SignUp" class="btn btn-outline-secondary">アカウント作成</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

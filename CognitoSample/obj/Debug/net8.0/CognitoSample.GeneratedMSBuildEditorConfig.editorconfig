@@ -1,0 +1,83 @@
+is_global = true
+build_property.TargetFramework = net8.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = CognitoSample
+build_property.RootNamespace = CognitoSample
+build_property.ProjectDir = /Users/yuta/Develop/dotnet-cognito/CognitoSample/
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.RazorLangVersion = 8.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = /Users/yuta/Develop/dotnet-cognito/CognitoSample
+build_property._RazorSourceGeneratorDebug = 
+
+[/Users/yuta/Develop/dotnet-cognito/CognitoSample/Views/Auth/ConfirmSignUp.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQXV0aC9Db25maXJtU2lnblVwLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/yuta/Develop/dotnet-cognito/CognitoSample/Views/Auth/MfaChallenge.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQXV0aC9NZmFDaGFsbGVuZ2UuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/yuta/Develop/dotnet-cognito/CognitoSample/Views/Auth/MfaSetup.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQXV0aC9NZmFTZXR1cC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/yuta/Develop/dotnet-cognito/CognitoSample/Views/Auth/Profile.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQXV0aC9Qcm9maWxlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/yuta/Develop/dotnet-cognito/CognitoSample/Views/Auth/SetupMfa.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQXV0aC9TZXR1cE1mYS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/yuta/Develop/dotnet-cognito/CognitoSample/Views/Auth/SignIn.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQXV0aC9TaWduSW4uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/yuta/Develop/dotnet-cognito/CognitoSample/Views/Auth/SignUp.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQXV0aC9TaWduVXAuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/yuta/Develop/dotnet-cognito/CognitoSample/Views/Dashboard/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvRGFzaGJvYXJkL0luZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/yuta/Develop/dotnet-cognito/CognitoSample/Views/Dashboard/SecretPage.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvRGFzaGJvYXJkL1NlY3JldFBhZ2UuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/yuta/Develop/dotnet-cognito/CognitoSample/Views/Home/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9JbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/yuta/Develop/dotnet-cognito/CognitoSample/Views/Home/Privacy.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9Qcml2YWN5LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/yuta/Develop/dotnet-cognito/CognitoSample/Views/Shared/Error.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL0Vycm9yLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/yuta/Develop/dotnet-cognito/CognitoSample/Views/Shared/_ValidationScriptsPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL19WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/yuta/Develop/dotnet-cognito/CognitoSample/Views/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/yuta/Develop/dotnet-cognito/CognitoSample/Views/_ViewStart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvX1ZpZXdTdGFydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/yuta/Develop/dotnet-cognito/CognitoSample/Views/Shared/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL19MYXlvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = b-0l2ccf15it
