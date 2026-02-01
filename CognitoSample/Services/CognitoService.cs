@@ -1,3 +1,5 @@
+using System.Security.Cryptography;
+using System.Text;
 using Amazon;
 using Amazon.CognitoIdentityProvider;
 using Amazon.CognitoIdentityProvider.Model;
@@ -9,10 +11,7 @@ public interface ICognitoService
     Task<SignUpResult> SignUpAsync(string email, string password);
     Task<ConfirmSignUpResponse> ConfirmSignUpAsync(string email, string confirmationCode);
     Task<AuthenticationResult> SignInAsync(string email, string password);
-    Task<AuthenticationResult> RespondToMfaChallengeAsync(string session, string mfaCode, string email);
-    Task<AssociateSoftwareTokenResponse> SetupMfaAsync(string accessToken);
-    Task<VerifySoftwareTokenResponse> VerifyMfaSetupAsync(string accessToken, string totpCode);
-    Task SetMfaPreferenceAsync(string accessToken);
+    Task<AuthenticationResult> RespondToEmailOtpChallengeAsync(string session, string otpCode, string email);
     Task<GlobalSignOutResponse> SignOutAsync(string accessToken);
     Task<GetUserResponse> GetUserAsync(string accessToken);
 }
@@ -31,7 +30,6 @@ public class AuthenticationResult
     public string? RefreshToken { get; set; }
     public string? ChallengeName { get; set; }
     public string? Session { get; set; }
-    public string? SecretCode { get; set; }
 }
 
 public class CognitoService : ICognitoService
@@ -39,6 +37,7 @@ public class CognitoService : ICognitoService
     private readonly AmazonCognitoIdentityProviderClient _client;
     private readonly string _userPoolId;
     private readonly string _clientId;
+    private readonly string? _clientSecret;
     private readonly ILogger<CognitoService> _logger;
 
     public CognitoService(IConfiguration configuration, ILogger<CognitoService> logger)
@@ -47,8 +46,30 @@ public class CognitoService : ICognitoService
         var region = configuration["AWS:Cognito:Region"] ?? "ap-northeast-1";
         _userPoolId = configuration["AWS:Cognito:UserPoolId"] ?? throw new ArgumentNullException("UserPoolId is required");
         _clientId = configuration["AWS:Cognito:ClientId"] ?? throw new ArgumentNullException("ClientId is required");
+        _clientSecret = configuration["AWS:Cognito:ClientSecret"];
 
-        _client = new AmazonCognitoIdentityProviderClient(RegionEndpoint.GetBySystemName(region));
+        var regionEndpoint = RegionEndpoint.GetBySystemName(region);
+        _client = new AmazonCognitoIdentityProviderClient(regionEndpoint);
+        _logger.LogInformation("Using AWS CLI credentials (default credentials chain)");
+
+        if (!string.IsNullOrEmpty(_clientSecret))
+        {
+            _logger.LogInformation("Client secret is configured, SECRET_HASH will be used");
+        }
+    }
+
+    private string? ComputeSecretHash(string username)
+    {
+        if (string.IsNullOrEmpty(_clientSecret))
+            return null;
+
+        var message = username + _clientId;
+        var keyBytes = Encoding.UTF8.GetBytes(_clientSecret);
+        var messageBytes = Encoding.UTF8.GetBytes(message);
+
+        using var hmac = new HMACSHA256(keyBytes);
+        var hashBytes = hmac.ComputeHash(messageBytes);
+        return Convert.ToBase64String(hashBytes);
     }
 
     public async Task<SignUpResult> SignUpAsync(string email, string password)
@@ -58,6 +79,7 @@ public class CognitoService : ICognitoService
             ClientId = _clientId,
             Username = email,
             Password = password,
+            SecretHash = ComputeSecretHash(email),
             UserAttributes = new List<AttributeType>
             {
                 new AttributeType { Name = "email", Value = email }
@@ -78,7 +100,8 @@ public class CognitoService : ICognitoService
         {
             ClientId = _clientId,
             Username = email,
-            ConfirmationCode = confirmationCode
+            ConfirmationCode = confirmationCode,
+            SecretHash = ComputeSecretHash(email)
         };
 
         return await _client.ConfirmSignUpAsync(request);
@@ -86,42 +109,34 @@ public class CognitoService : ICognitoService
 
     public async Task<AuthenticationResult> SignInAsync(string email, string password)
     {
+        var authParameters = new Dictionary<string, string>
+        {
+            { "USERNAME", email },
+            { "PASSWORD", password }
+        };
+
+        var secretHash = ComputeSecretHash(email);
+        if (!string.IsNullOrEmpty(secretHash))
+        {
+            authParameters["SECRET_HASH"] = secretHash;
+        }
+
         var request = new InitiateAuthRequest
         {
             AuthFlow = AuthFlowType.USER_PASSWORD_AUTH,
             ClientId = _clientId,
-            AuthParameters = new Dictionary<string, string>
-            {
-                { "USERNAME", email },
-                { "PASSWORD", password }
-            }
+            AuthParameters = authParameters
         };
 
         var response = await _client.InitiateAuthAsync(request);
 
-        if (response.ChallengeName == ChallengeNameType.SOFTWARE_TOKEN_MFA)
+        if (response.ChallengeName?.Value == "EMAIL_OTP")
         {
             return new AuthenticationResult
             {
                 Success = false,
-                ChallengeName = "SOFTWARE_TOKEN_MFA",
+                ChallengeName = "EMAIL_OTP",
                 Session = response.Session
-            };
-        }
-
-        if (response.ChallengeName == ChallengeNameType.MFA_SETUP)
-        {
-            var associateResponse = await _client.AssociateSoftwareTokenAsync(new AssociateSoftwareTokenRequest
-            {
-                Session = response.Session
-            });
-
-            return new AuthenticationResult
-            {
-                Success = false,
-                ChallengeName = "MFA_SETUP",
-                Session = associateResponse.Session,
-                SecretCode = associateResponse.SecretCode
             };
         }
 
@@ -143,18 +158,26 @@ public class CognitoService : ICognitoService
         };
     }
 
-    public async Task<AuthenticationResult> RespondToMfaChallengeAsync(string session, string mfaCode, string email)
+    public async Task<AuthenticationResult> RespondToEmailOtpChallengeAsync(string session, string otpCode, string email)
     {
+        var challengeResponses = new Dictionary<string, string>
+        {
+            { "USERNAME", email },
+            { "EMAIL_OTP_CODE", otpCode }
+        };
+
+        var secretHash = ComputeSecretHash(email);
+        if (!string.IsNullOrEmpty(secretHash))
+        {
+            challengeResponses["SECRET_HASH"] = secretHash;
+        }
+
         var request = new RespondToAuthChallengeRequest
         {
             ClientId = _clientId,
-            ChallengeName = ChallengeNameType.SOFTWARE_TOKEN_MFA,
+            ChallengeName = new ChallengeNameType("EMAIL_OTP"),
             Session = session,
-            ChallengeResponses = new Dictionary<string, string>
-            {
-                { "USERNAME", email },
-                { "SOFTWARE_TOKEN_MFA_CODE", mfaCode }
-            }
+            ChallengeResponses = challengeResponses
         };
 
         var response = await _client.RespondToAuthChallengeAsync(request);
@@ -175,42 +198,6 @@ public class CognitoService : ICognitoService
             Success = false,
             ChallengeName = response.ChallengeName?.Value
         };
-    }
-
-    public async Task<AssociateSoftwareTokenResponse> SetupMfaAsync(string accessToken)
-    {
-        var request = new AssociateSoftwareTokenRequest
-        {
-            AccessToken = accessToken
-        };
-
-        return await _client.AssociateSoftwareTokenAsync(request);
-    }
-
-    public async Task<VerifySoftwareTokenResponse> VerifyMfaSetupAsync(string accessToken, string totpCode)
-    {
-        var request = new VerifySoftwareTokenRequest
-        {
-            AccessToken = accessToken,
-            UserCode = totpCode
-        };
-
-        return await _client.VerifySoftwareTokenAsync(request);
-    }
-
-    public async Task SetMfaPreferenceAsync(string accessToken)
-    {
-        var request = new SetUserMFAPreferenceRequest
-        {
-            AccessToken = accessToken,
-            SoftwareTokenMfaSettings = new SoftwareTokenMfaSettingsType
-            {
-                Enabled = true,
-                PreferredMfa = true
-            }
-        };
-
-        await _client.SetUserMFAPreferenceAsync(request);
     }
 
     public async Task<GlobalSignOutResponse> SignOutAsync(string accessToken)

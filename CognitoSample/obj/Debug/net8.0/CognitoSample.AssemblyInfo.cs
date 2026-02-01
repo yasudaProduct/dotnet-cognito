@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CognitoSample")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1838613e40afbccc2fcb5f473187299fa8d92cee")]
 [assembly: System.Reflection.AssemblyProductAttribute("CognitoSample")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CognitoSample")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

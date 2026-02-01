@@ -40,31 +40,18 @@ public class SignInViewModel
     public string Password { get; set; } = string.Empty;
 }
 
-public class MfaChallengeViewModel
+public class EmailOtpChallengeViewModel
 {
     public string Session { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
 
-    [Required(ErrorMessage = "MFAコードは必須です")]
-    [StringLength(6, MinimumLength = 6, ErrorMessage = "MFAコードは6桁で入力してください")]
-    public string MfaCode { get; set; } = string.Empty;
-}
-
-public class MfaSetupViewModel
-{
-    public string SecretCode { get; set; } = string.Empty;
-    public string QrCodeUri { get; set; } = string.Empty;
-    public string Session { get; set; } = string.Empty;
-    public string Email { get; set; } = string.Empty;
-
-    [Required(ErrorMessage = "確認コードは必須です")]
-    [StringLength(6, MinimumLength = 6, ErrorMessage = "確認コードは6桁で入力してください")]
-    public string VerificationCode { get; set; } = string.Empty;
+    [Required(ErrorMessage = "ワンタイムパスワードは必須です")]
+    [StringLength(6, MinimumLength = 6, ErrorMessage = "ワンタイムパスワードは6桁で入力してください")]
+    public string OtpCode { get; set; } = string.Empty;
 }
 
 public class UserProfileViewModel
 {
     public string Email { get; set; } = string.Empty;
     public string Username { get; set; } = string.Empty;
-    public bool MfaEnabled { get; set; }
 }

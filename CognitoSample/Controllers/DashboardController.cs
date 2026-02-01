@@ -26,14 +26,12 @@ public class DashboardController : Controller
             var user = await _cognitoService.GetUserAsync(accessToken!);
             ViewBag.Username = user.Username;
             ViewBag.Email = email;
-            ViewBag.MfaEnabled = user.UserMFASettingList?.Contains("SOFTWARE_TOKEN_MFA") ?? false;
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to get user info");
             ViewBag.Username = email;
             ViewBag.Email = email;
-            ViewBag.MfaEnabled = false;
         }
 
         return View();

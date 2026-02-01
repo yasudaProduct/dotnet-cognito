@@ -32,3 +32,4 @@
 /Users/yuta/Develop/dotnet-cognito/CognitoSample/bin/Debug/net8.0/AWSSDK.CognitoIdentityProvider.dll
 /Users/yuta/Develop/dotnet-cognito/CognitoSample/bin/Debug/net8.0/AWSSDK.Core.dll
 /Users/yuta/Develop/dotnet-cognito/CognitoSample/obj/Debug/net8.0/CognitoSample.csproj.CopyComplete
+/Users/yuta/Develop/dotnet-cognito/CognitoSample/obj/Debug/net8.0/CognitoSample.sourcelink.json

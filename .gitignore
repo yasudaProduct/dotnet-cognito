@@ -1,0 +1,5 @@
+bin
+obj
+
+# 秘密情報を含む設定ファイル
+appsettings.Development.json

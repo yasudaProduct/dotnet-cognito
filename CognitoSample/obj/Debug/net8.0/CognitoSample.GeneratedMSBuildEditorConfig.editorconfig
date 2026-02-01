@@ -22,20 +22,12 @@ build_property._RazorSourceGeneratorDebug =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQXV0aC9Db25maXJtU2lnblVwLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/yuta/Develop/dotnet-cognito/CognitoSample/Views/Auth/MfaChallenge.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQXV0aC9NZmFDaGFsbGVuZ2UuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[/Users/yuta/Develop/dotnet-cognito/CognitoSample/Views/Auth/MfaSetup.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQXV0aC9NZmFTZXR1cC5jc2h0bWw=
+[/Users/yuta/Develop/dotnet-cognito/CognitoSample/Views/Auth/EmailOtpChallenge.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQXV0aC9FbWFpbE90cENoYWxsZW5nZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [/Users/yuta/Develop/dotnet-cognito/CognitoSample/Views/Auth/Profile.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQXV0aC9Qcm9maWxlLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/Users/yuta/Develop/dotnet-cognito/CognitoSample/Views/Auth/SetupMfa.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQXV0aC9TZXR1cE1mYS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [/Users/yuta/Develop/dotnet-cognito/CognitoSample/Views/Auth/SignIn.cshtml]
