@@ -70,6 +70,125 @@ sequenceDiagram
 - Amazon SES（OTP メール送信）
 - Cookie 認証
 
+## このサンプルの評価と位置づけ
+
+### Cognito の活用範囲
+
+このサンプルは、**Cognito を「OTP 送信・検証サービス」として限定的に使用**しています。
+
+#### ✅ 使用している Cognito の機能
+
+| 機能 | 使用方法 |
+|------|----------|
+| **CUSTOM_AUTH フロー** | InitiateAuth / RespondToAuthChallenge による OTP チャレンジ |
+| **Lambda トリガー** | Define/Create/Verify Auth Challenge での OTP 生成・検証ロジック |
+| **チャレンジセッション管理** | Cognito が OTP チャレンジのセッションを管理 |
+| **SES 連携（Lambda 経由）** | Create Auth Challenge Lambda から SES でメール送信 |
+
+#### ❌ 使用していない Cognito の主要機能
+
+| 機能 | 現状 |
+|------|------|
+| **ユーザー管理** | 独自実装（LocalAuthService のインメモリ）で代替 |
+| **パスワード管理** | 独自実装で管理。Cognito のパスワードポリシー・リセット機能を未使用 |
+| **JWT トークン認証** | AuthenticationResult のトークンを**破棄**し、Cookie 認証で代替 |
+| **AccessToken / IdToken** | 取得しているが使用せず |
+| **RefreshToken** | トークン更新の仕組みを未実装 |
+| **標準認証フロー** | USER_PASSWORD_AUTH、SRP_AUTH などを未使用 |
+| **標準 MFA** | TOTP、SMS MFA を未使用（OTP は CUSTOM_CHALLENGE で独自実装） |
+| **セキュリティ機能** | アカウントロック、リスクベース認証、グループ・ロール管理を未使用 |
+
+### このサンプルの特徴
+
+#### 設計思想
+
+このサンプルは、以下のような要件を想定しています：
+
+- **既存の独自認証システムが存在**し、それを維持したい
+- **OTP による二要素認証を追加**したいが、認証基盤全体を Cognito に移行したくない
+- **アプリケーションのセッション管理は独自実装**（Cookie）を継続したい
+
+#### 実装の位置づけ
+
+```
+完全独自実装 ←──── このサンプル ────→ 完全 Cognito 移行
+
+[独自Auth + 独自OTP]  [独自Auth + Cognito OTP]  [Cognito Auth + Cognito MFA]
+```
+
+このサンプルは、**独自認証システムと Cognito の中間的なアプローチ**です。
+
+### メリット
+
+1. **段階的な移行が可能**
+   - 既存の認証システムを維持しながら、OTP 機能だけ Cognito を利用
+   - 将来的に完全移行する際の足がかりになる
+
+2. **OTP 実装の複雑さを Cognito に委譲**
+   - OTP 生成ロジック
+   - セッション管理
+   - Lambda での柔軟なカスタマイズ
+
+3. **SES との連携が容易**
+   - Lambda から SES を呼び出すだけでメール送信が可能
+
+### デメリット
+
+1. **Cognito の本来の価値を活用できていない**
+   - JWT トークンベース認証の恩恵を受けられない
+   - ユーザー管理、パスワード管理などの高度な機能が未使用
+
+2. **二重のユーザー管理が必要**
+   - ローカル（独自実装）と Cognito User Pool の両方でユーザーを管理
+   - メールアドレスの同期が必要
+
+3. **コスト面での非効率**
+   - Cognito の料金は発生するが、機能の一部しか使っていない
+   - Lambda 実行コストも追加で発生
+
+4. **複雑性の増加**
+   - 独自認証 + Cognito + Cookie 認証の3層構造
+   - トラブルシューティングが複雑
+
+### このサンプルが適している場面
+
+- ✅ 既存の独自認証システムがあり、それを維持したい場合
+- ✅ OTP 機能だけを追加したい場合
+- ✅ 将来的に Cognito への完全移行を検討している場合（段階的移行の第一歩）
+- ✅ Lambda で OTP のカスタマイズロジックを実装したい場合
+
+### このサンプルが適していない場面
+
+- ❌ 新規プロジェクトで認証基盤を構築する場合
+  - → Cognito の標準フロー（USER_PASSWORD_AUTH + TOTP/SMS MFA）を推奨
+- ❌ JWT トークンベース認証を採用したい場合
+  - → Cognito の JWT トークンをそのまま使用
+- ❌ マイクロサービスや API 間認証が必要な場合
+  - → Cognito の AccessToken を使った認可が適切
+
+### 重要な注意点
+
+#### トークンの破棄について
+
+`CognitoCustomOtpService.cs` の実装では、Cognito から返される `AuthenticationResult` に含まれる JWT トークン（AccessToken、IdToken、RefreshToken）を取得していますが、**単なる成功判定にのみ使用し、その後破棄**しています。
+
+```csharp
+// CognitoCustomOtpService.cs:89-92
+if (response.AuthenticationResult != null)
+{
+    _logger.LogInformation("OTP verification successful for user: {Email}", email);
+    return true;  // ← トークンを破棄
+}
+```
+
+本来、これらのトークンは以下の用途で使用されるべきものです：
+
+- **AccessToken**: API アクセスの認可、ユーザー情報取得
+- **IdToken**: ユーザー属性情報（クレーム）の取得
+- **RefreshToken**: トークンの更新
+
+このサンプルでは、代わりに Cookie 認証を使用しているため、Cognito のトークン管理機能は活用されていません。
+
 ## プロジェクト構成
 
 ```
