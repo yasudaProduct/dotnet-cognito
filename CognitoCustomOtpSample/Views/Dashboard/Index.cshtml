@@ -1,0 +1,65 @@
+@{
+    ViewData["Title"] = "ダッシュボード";
+}
+
+<div class="row">
+    <div class="col-12">
+        <h1>ダッシュボード</h1>
+        <p class="lead">ようこそ、<strong>@ViewBag.Email</strong> さん</p>
+    </div>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">ユーザー情報</h5>
+                <dl>
+                    <dt>ユーザー名</dt>
+                    <dd>@ViewBag.Username</dd>
+                    <dt>メールアドレス</dt>
+                    <dd>@ViewBag.Email</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">認証情報</h5>
+                <p class="card-text">
+                    このページは Cookie 認証で保護されています。<br />
+                    独自パスワード認証 + Cognito CUSTOM_AUTH (OTP) で認証が完了しました。
+                </p>
+                <form asp-controller="Auth" asp-action="Logout" method="post">
+                    <button type="submit" class="btn btn-danger">ログアウト</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="alert alert-info">
+            <h5>このアプリケーションについて</h5>
+            <p class="mb-0">
+                このサンプルアプリケーションは、以下の認証フローを実装しています：
+            </p>
+            <ol class="mb-0">
+                <li>独自認証（メールアドレス + パスワード）でローカルユーザーを検証</li>
+                <li>独自認証成功後、Cognito の CUSTOM_AUTH フローで OTP をメール送信</li>
+                <li>OTP を検証し、成功したら Cookie 認証でサインイン</li>
+            </ol>
+        </div>
+    </div>
+</div>

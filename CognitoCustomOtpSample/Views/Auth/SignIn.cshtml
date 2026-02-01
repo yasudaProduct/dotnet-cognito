@@ -1,0 +1,56 @@
+@model SignInViewModel
+@{
+    ViewData["Title"] = "ログイン";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title text-center mb-4">ログイン</h2>
+
+                @if (TempData["InfoMessage"] != null)
+                {
+                    <div class="alert alert-info">@TempData["InfoMessage"]</div>
+                }
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+                }
+
+                <form asp-action="SignIn" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label">メールアドレス</label>
+                        <input asp-for="Email" class="form-control" placeholder="user@example.com" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Password" class="form-label">パスワード</label>
+                        <input asp-for="Password" class="form-control" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">ログイン</button>
+                    </div>
+                </form>
+
+                <hr />
+                <div class="alert alert-info mt-3">
+                    <h6>テストユーザー:</h6>
+                    <ul class="mb-0">
+                        <li>user@example.com / Password123!</li>
+                        <li>test@example.com / Test123456!</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
