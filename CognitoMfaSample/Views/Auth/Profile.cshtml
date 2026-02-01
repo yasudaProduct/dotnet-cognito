@@ -1,0 +1,38 @@
+@model CognitoMfaSample.Models.UserProfileViewModel
+@{
+    ViewData["Title"] = "プロフィール";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">プロフィール</h4>
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-3">メールアドレス</dt>
+                    <dd class="col-sm-9">@Model.Email</dd>
+                </dl>
+
+                <hr />
+
+                <form asp-action="Logout" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-danger">ログアウト</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="mb-0">セキュリティ情報</h5>
+            </div>
+            <div class="card-body">
+                <p class="text-muted mb-0">
+                    このアカウントはAmazon Cognitoの多要素認証（Email-OTP）によって保護されています。
+                    ログイン時にメールでワンタイムパスワードが送信されます。
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,47 @@
+@{
+    ViewData["Title"] = "ダッシュボード";
+}
+
+<div class="row">
+    <div class="col-12">
+        <h1>ダッシュボード</h1>
+        <p class="lead">ようこそ、<strong>@ViewBag.Email</strong> さん</p>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">ユーザー情報</h5>
+                <dl>
+                    <dt>メールアドレス</dt>
+                    <dd>@ViewBag.Email</dd>
+                </dl>
+                <a asp-controller="Auth" asp-action="Profile" class="btn btn-outline-primary btn-sm">プロフィール設定</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">会員限定コンテンツ</h5>
+                <p class="card-text">ログインユーザーのみがアクセスできる特別なコンテンツです。</p>
+                <a asp-action="SecretPage" class="btn btn-primary">秘密のページへ</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="alert alert-info">
+            <h5>このページについて</h5>
+            <p class="mb-0">
+                このダッシュボードはログインしたユーザーのみがアクセスできます。
+                未ログイン状態でアクセスすると、自動的にログインページへリダイレクトされます。
+            </p>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,39 @@
+@model CognitoMfaSample.Models.ConfirmSignUpViewModel
+@{
+    ViewData["Title"] = "メール確認";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">メールアドレス確認</h4>
+            </div>
+            <div class="card-body">
+                <p class="text-muted">
+                    メールアドレスに確認コードを送信しました。メールに記載された6桁のコードを入力してください。
+                </p>
+
+                <form asp-action="ConfirmSignUp" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <input asp-for="Email" type="hidden" />
+
+                    <div class="mb-3">
+                        <label asp-for="ConfirmationCode" class="form-label">確認コード</label>
+                        <input asp-for="ConfirmationCode" class="form-control" maxlength="6" placeholder="123456" />
+                        <span asp-validation-for="ConfirmationCode" class="text-danger"></span>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">確認</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,42 @@
+@model CognitoMfaSample.Models.EmailOtpChallengeViewModel
+@{
+    ViewData["Title"] = "ワンタイムパスワード";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">ワンタイムパスワード認証</h4>
+            </div>
+            <div class="card-body">
+                <p class="text-muted">
+                    メールに送信された6桁のワンタイムパスワードを入力してください。
+                </p>
+
+                <form asp-action="EmailOtpChallenge" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <input asp-for="Session" type="hidden" />
+                    <input asp-for="Email" type="hidden" />
+
+                    <div class="mb-3">
+                        <label asp-for="OtpCode" class="form-label">ワンタイムパスワード</label>
+                        <input asp-for="OtpCode" class="form-control text-center" maxlength="6"
+                               style="font-size: 1.5rem; letter-spacing: 0.5rem;"
+                               autocomplete="one-time-code" placeholder="------" />
+                        <span asp-validation-for="OtpCode" class="text-danger"></span>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">確認</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
